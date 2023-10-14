@@ -2,10 +2,114 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance system</title>
+    <title>Attendance Tracker</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Add Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        table{
+            border: 1px solid black;
+        }
+        tr{
+            border: 1px solid black;
+        }
+        th{
+            border: 1px solid black;
+        }
+        td{
+            border: 1px solid black;
+        }
+        
+    </style>
 </head>
 <body>
-    Welcome to attendance system
+    
+    <div class="container mt-4">
+        <h1>Attendance Tracker</h1>
+        <ul class="nav nav-tabs" id="attendanceTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+            <a class="nav-link active" id="specific-attendance-tab" data-bs-toggle="tab" href="#specific-attendance" role="tab" aria-controls="specific-attendance" aria-selected="true">Net ID Attendance</a>
+            </li>
+            <li class="nav-item" role="presentation">
+            <a class="nav-link" id="general-attendance-tab" data-bs-toggle="tab" href="#general-attendance" role="tab" aria-controls="general-attendance" aria-selected="false">General Attendance</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="attendanceTabsContent">
+            <div class="tab-pane fade" id="general-attendance" role="tabpanel" aria-labelledby="general-attendance-tab">
+                <!-- General Attendance Content Goes Here -->
+                <p>This is the general attendance section.</p>
+                <form action="/load_csv" method="POST" enctype="multipart/form-data">
+                    <label for="csv_file">Load CSV File:</label>
+                    <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+                    <button type="submit">Load</button>
+                </form>
+                <p>{{ current_csv }}</p>
+              
+                <form action="/generate_attendance" method="POST">
+                    <label for="start_date">Select Start Date:</label>
+                    <input id="start_date" name="start_date" type="text" required>
+                    <br>
+                    <br>
+                    <label for="end_date">Select End Date:</label>
+                    <input id="end_date" name="end_date" type="text" required>
+                    <br>
+                    <br>
+                    <button type="submit">Generate Attendance for all</button>
+                    <br>
+                    <div>{{ result_text_list|safe }}</div>
+
+                </form>
+            </div>
+            <div class="tab-pane fade show active" id="specific-attendance" role="tabpanel" aria-labelledby="specific-attendance-tab">
+                <!-- Specific Attendance Content Goes Here -->
+                <p>This is the NetID specific attendance section.</p>
+                <form action="/load_csv" method="POST" enctype="multipart/form-data">
+                    <label for="csv_file">Load CSV File:</label>
+                    <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+                    <button type="submit">Load</button>
+                </form>
+                <p>{{ current_csv }}</p>
+            
+                <form action="/generate_attendance" method="POST">
+                    <label for="uid">Select uid:</label>
+                    <select id="uid" name="uid" required>
+                        {% for option in uid_options %}
+                        <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <br>
+                    <label for="start_date">Select Start Date:</label>
+                    <input id="start_date" name="start_date" type="text" required>
+                    <br>
+                    <br>
+                    <label for="end_date">Select End Date:</label>
+                    <input id="end_date" name="end_date" type="text" required>
+                    <br>
+                    <br>
+                    <button type="submit">Generate Attendance</button>
+                    <p>{{ result_text_percentage }}</p>
+                    <div>{{ result_text_list|safe }}</div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        flatpickr('#start_date', {
+            dateFormat: "m/d/Y",
+            allowInput: true
+        });
+        flatpickr('#end_date', {
+            dateFormat: "m/d/Y",
+            allowInput: true
+        });
+    </script>
+
+    <!-- Add Bootstrap JavaScript and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
 </body>
 </html>
